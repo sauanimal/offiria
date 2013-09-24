@@ -25,6 +25,9 @@ class AccountViewUpdate extends AccountView
 	{		
 		$doc = JFactory::getDocument();
 		$doc->setTitle(JText::_("COM_ACCOUNT_LABEL_UPDATES"));
+		
+		$this->addPathway( JText::_('JXLIB_SETTINGS'), JRoute::_('index.php?option=com_account&view=account'));
+		$this->addPathway(JText::_('COM_ACCOUNT_LABEL_UPDATES'));
 		$this->assignRef('renderData', $renderData);
 		parent::display(null);
 	}

@@ -32,6 +32,7 @@ if (!$my->authorise('stream.setting.edit', $accessHelper) && JRequest::getVar('v
 // Require specific controller if requested
 if($controller = JRequest::getVar('view', 'display')) {
 	$path = JPATH_COMPONENT.DS.'controllers'.DS.$controller.'.php';
+
 	if (file_exists($path)) {
 		require_once $path;
 	} else {
@@ -44,6 +45,5 @@ $classname	= 'AccountController'.ucfirst($controller);
 $controller = new $classname();
 
 // Execute the task.
-$controller->execute(JRequest::getVar('task', 'display'));
+$controller->execute(JRequest::getCmd('task', 'display'));
 $controller->redirect();
-

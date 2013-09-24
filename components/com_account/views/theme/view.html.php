@@ -21,12 +21,14 @@ class AccountViewTheme extends AccountView
 	{
 		$configHelper	= new JXConfig();
 		
-		$this->assignRef('logo', $configHelper->get(JXConfig::LOGO));
-		$this->assignRef('style', $configHelper->get(JXConfig::STYLE));
+		$this->assign('logo', $configHelper->get(JXConfig::LOGO));
+		$this->assign('style', $configHelper->get(JXConfig::STYLE));
 		$this->assignRef('configHelper', $configHelper);
 		
 		$doc = JFactory::getDocument();
 		$doc->setTitle(JText::_("COM_ACCOUNT_LABEL_MANAGE_THEME"));
+		$this->addPathway( JText::_('JXLIB_SETTINGS'), JRoute::_('index.php?option=com_account&view=account'));
+		$this->addPathway(JText::_('COM_ACCOUNT_LABEL_MANAGE_THEME'));
 		parent::display($tpl);
 	}
 }

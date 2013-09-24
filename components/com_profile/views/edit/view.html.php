@@ -2,7 +2,7 @@
 /**
  * @version     1.0.0
  * @package     com_administrator
- * @copyright   Copyright (C) 2011. All rights reserved.
+ * @copyright   Copyright (C) 2011 - 2013 Slashes & Dots Sdn Bhd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @author      Created by com_combuilder - http://www.notwebdesign.com
  */
@@ -27,14 +27,14 @@ class ProfileViewEdit extends ProfileView
 
 		$this->assignRef('user', $user);
 		// use JForm to create standardize 
-		$form =& JForm::getInstance('profileForm', JPATH_ROOT.DS.'components'.DS.'com_profile'.DS.'models'.DS.'forms'.DS.'edit.xml');
+		$form = JForm::getInstance('profileForm', JPATH_ROOT.DS.'components'.DS.'com_profile'.DS.'models'.DS.'forms'.DS.'edit.xml');
 
 		$this->assignRef('profileForm', $form);
-		$this->assignRef('userEmail', $user->get('email'));
-		$this->assignRef('userTimezone', $user->getParam('timezone'));
-		$this->assignRef('userLanguage', $user->getParam('language'));
-		$this->assignRef('userAboutMe', $user->getParam('about_me'));
-		$this->assignRef('isIntegration', JXIntegration::isActiveDirectory($user->getParam('integration')));
+		$this->assign('userEmail', $user->get('email'));
+		$this->assign('userTimezone', $user->getParam('timezone'));
+		$this->assign('userLanguage', $user->getParam('language'));
+		$this->assign('userAboutMe', $user->getParam('about_me'));
+		$this->assign('isIntegration', JXIntegration::isActiveDirectory($user->getParam('integration')));
 
 
 		/* $this->assignRef('timezoneList', $this->getTimezoneList()); */
@@ -42,11 +42,13 @@ class ProfileViewEdit extends ProfileView
 		/* $jLang = JFactory::getLanguage(); */
 		/* $this->assignRef('languageList', $jLang->getKnownLanguages()); */
 
-		$document =& JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->addScript(JURI::root().'media/jquery/jquery-1.7.min.js');
 		$document->setTitle(JText::_('COM_PROFILE_LABEL_EDIT_PROFILE'));
-
-	    parent::display($tpl);
+		$this->addPathway( JText::_('NAVIGATOR_LABEL_PROFILE'), JRoute::_('index.php?option=com_profile&view=edit'));
+		$this->addPathway(JText::_('COM_PROFILE_LABEL_EDIT_PROFILE'));
+	    
+		parent::display($tpl);
 	}
 
 }

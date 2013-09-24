@@ -107,21 +107,21 @@ class ProfileViewDisplay extends ProfileView
 				break;
 		}
 
-		//$document =& JFactory::getDocument();
+		//$document = JFactory::getDocument();
 		// $document->setTitle(JText::_('COM_PROFILE_LABEL_PROFILE_PAGE').': '.$user->name);
 		$groupView = StreamFactory::getView('groups');
-		JXModule::addBuffer('right', $groupView->getUserActiveGroupsHTML($user->id));
+		JXModule::addBuffer('right', $groupView->getUserActiveGroupsHTML($user->id), 'group.module.groups');
 		
 		// development
 		$fileView = StreamFactory::getView('files');
-		JXModule::addBuffer('right', $fileView->modUserFilesHTML($user));
+		JXModule::addBuffer('right', $fileView->modUserFilesHTML($user), 'file.module.list');
 
 		parent::display($tpl);
 	}
 	
 	public function generateAnalytics($user)
 	{
-		require_once( JPATH_ROOT. DS. 'libraries/HighRoller/HighRoller.php');
+		require_once(JPATH_ROOT. DS. 'libraries/HighRoller/HighRoller.php');
 		require_once(JPATH_ROOT. DS. 'libraries/HighRoller/HighRollerSeriesData.php');
 		require_once(JPATH_ROOT. DS. 'libraries/HighRoller/HighRollerLineChart.php');
 		require_once(JPATH_ROOT. DS. 'libraries/HighRoller/HighRollerColumnChart.php');

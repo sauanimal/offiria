@@ -29,12 +29,12 @@ class StreamViewCompany extends StreamView
 		$eventView = StreamFactory::getView('events');
 
 		// Side bar modules
-		JXModule::addBuffer('right', $this->modTagsTrendingHTML());
+		JXModule::addBuffer('right', $this->modTagsTrendingHTML(),'stream.tag.trending');
 
 		if(!$my->isExtranetMember()) {
-			JXModule::addBuffer('right', $groupView->getNewGroupsHTML($my->getMergedGroupIDs()));
+			JXModule::addBuffer('right', $groupView->getNewGroupsHTML($my->getMergedGroupIDs()),'group.module.groups');
 		}
-		JXModule::addBuffer('right', $eventView->getUpcomingHTML());
+		JXModule::addBuffer('right', $eventView->getUpcomingHTML(), 'group.module.eventslist');
 
 		echo $this->getStreamPostHTML(); // Post box
 		echo $this->getStreamDataHTML(); // Stream items
@@ -76,7 +76,7 @@ class StreamViewCompany extends StreamView
 		}
 
 		// Trending tags at the right sidebar
-		JXModule::addBuffer('right', $this->modTagsTrendingHTML((isset($group)) ? $group : null));
+		JXModule::addBuffer('right', $this->modTagsTrendingHTML((isset($group)) ? $group : null), 'stream.tag.trending');
 
 		$html .= '<hr />';
 		$html .= $this->getStreamDataHTML($filter, $options);
@@ -257,6 +257,6 @@ class StreamViewCompany extends StreamView
 		$tmpl->set('firstDay', $firstDay)->set('lastDay', $lastDay)->set('today', $today)->set('weekNumber', $weekOfYear);
 		$tmpl->set('todos', $todo)->set('events', $events)->set('milestones', $milestones);
 		$tmpl->set('todoCount', count($todo))->set('eventCount', count($events))->set('milestoneCount', count($milestones))->set('showPopup', $showPopup);
-		return $tmpl->fetch('stream.module.dailyoverview');
+		return $tmpl->fetch('..'.DS.'modules'.DS.'stream.module.dailyoverview');
 	}
 }

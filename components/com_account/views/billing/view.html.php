@@ -24,6 +24,8 @@ class AccountViewBilling extends AccountView
 		$jxConfig	= new JXConfig();
 		$doc		= JFactory::getDocument();
 		$doc->setTitle(JText::_("COM_ACCOUNT_LABEL_BILLING"));
+		$this->addPathway( JText::_('JXLIB_SETTINGS'), JRoute::_('index.php?option=com_account&view=account'));
+		$this->addPathway(JText::_('COM_ACCOUNT_LABEL_BILLING'));
 		
 		$total = 0;
 		/*$payments = JModel::getInstance('payments', 'AccountModel');

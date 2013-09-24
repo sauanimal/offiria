@@ -23,6 +23,18 @@ class AccountModelUsersInvite extends JModel
 	{
 		$db			= JFactory::getDbo();
 		$condition	= ' WHERE invite_email <> "" ';
+
+		switch(JRequest::getVar('filter', 'all')) {
+			case 'pending':
+				$condition .= 'AND status = 1 ';
+				break;
+			case 'sent':
+				$condition .= 'AND (status = 2 OR status = 4) ';
+				break;
+			case 'cancelled':
+				$condition .= 'AND status = 3 ';
+				break;
+		}
 		$orderBy	= '';
 		
 		if (isset($filter['status']) && intval($filter['status']) > 0)

@@ -64,7 +64,7 @@ class MessagingViewInbox extends MessagingView
 		$this->assignRef('my', $my);
 		$this->assignRef('toUser', $toUser);
 		$this->assignRef('messages', $data->msg);
-		$this->assignRef('totalMessages', $messagingModel->getUserInboxCount());
+		$this->assign('totalMessages', $messagingModel->getUserInboxCount());
 
 		parent::display($tpl);
 	}
@@ -74,8 +74,8 @@ class MessagingViewInbox extends MessagingView
 	 */
 	public function read($data)
 	{
-		$mainframe =& JFactory::getApplication();
-		$my =& JFactory::getUser();
+		$mainframe = JFactory::getApplication();
+		$my = JFactory::getUser();
 		$doc = JFactory::getDocument();
 
 		// Add file attachment library

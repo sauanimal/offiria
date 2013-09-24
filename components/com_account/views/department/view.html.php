@@ -23,6 +23,8 @@ class AccountViewDepartment extends AccountView
 		
 		$doc = JFactory::getDocument();
 		$doc->setTitle(JText::_("COM_ACCOUNT_LABEL_MANAGE_DEPARTMENT"));
+		$this->addPathway( JText::_('JXLIB_SETTINGS'), JRoute::_('index.php?option=com_account&view=account'));
+		$this->addPathway(JText::_('COM_ACCOUNT_LABEL_MANAGE_DEPARTMENT'));
 		parent::display($tpl);
 	}
 }

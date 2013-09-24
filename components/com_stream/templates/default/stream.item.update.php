@@ -21,9 +21,7 @@ $data = json_decode($stream->raw);
 	</div><!-- Added - 17JAN2012 -->
 
  	<div class="message-content">
-	
 		<div class="message-content-top">
-			
 			<div class="message-meta-top">
 				<div class="message-content-actor">
 					<strong>
@@ -68,7 +66,7 @@ $data = json_decode($stream->raw);
 						<input type="text" class="topic-input" />
 						<input type="button" class="topic-add stream-form-topic-add" name="" value="Add Topic" />
 					</div>
-					<a href="javascript:void(0)" class="message-topic-edit topic-edit-change">Edit</a>
+					<a href="javascript:void(0)" class="message-topic-edit topic-edit-change"><?php echo JText::_('COM_STREAM_LABEL_EDIT');?></a>
 					<?php endif; ?>
 				</div>
 
@@ -100,10 +98,24 @@ $data = json_decode($stream->raw);
 		</div>
 		
 	</div>
-
-	<?php if(!empty($data->pinned)) : ?>
-		<div class="pinned-message"></div>
-	<?php endif; ?>
+	<?
+	if(!empty($data->pinned)) :
+		$tmpDate = date_parse($stream->created);
+		$start = strtotime("now");
+		if ($data->pinned == "1 month") {
+			$end = strtotime("+1 month", mktime($tmpDate["hour"],$tmpDate["minute"],$tmpDate["second"],$tmpDate["month"],$tmpDate["day"], $tmpDate["year"]));	
+		} elseif ($data->pinned == "1 week") {
+			$end = strtotime("+1 week", mktime($tmpDate["hour"],$tmpDate["minute"],$tmpDate["second"],$tmpDate["month"],$tmpDate["day"], $tmpDate["year"]));	
+		} else {
+			$end = strtotime("+1 day", mktime($tmpDate["hour"],$tmpDate["minute"],$tmpDate["second"],$tmpDate["month"],$tmpDate["day"], $tmpDate["year"]));	
+		}
+		$seconds_diff = $end - $start;
+		
+		if (floor($seconds_diff/3600/24) >= 0) :
+		?>
+			<div class="pinned-message tips" title="<?php echo sprintf(JText::_('COM_STREAM_LABEL_PINNED_TIP'),floor($seconds_diff/3600/24)); ?>"></div>
+	<?php endif;
+	endif; ?>
 		
 	<?php	// You can only delete your own message
 	if( $my->authorise('stream.message.edit', $stream) ) {

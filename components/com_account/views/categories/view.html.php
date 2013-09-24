@@ -21,6 +21,8 @@ class AccountViewCategories extends AccountView
 	{
 		$doc		= JFactory::getDocument();
 		$doc->setTitle(JText::_("COM_ACCOUNT_LABEL_CATEGORIES"));
+		$this->addPathway( JText::_('JXLIB_SETTINGS'), JRoute::_('index.php?option=com_account&view=account'));
+		$this->addPathway(JText::_('COM_ACCOUNT_LABEL_CATEGORIES'));
 		// grab existing categories 
 		parent::display($tpl);
 	}

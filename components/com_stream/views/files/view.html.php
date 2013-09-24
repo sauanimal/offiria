@@ -49,13 +49,19 @@ class StreamViewFiles extends StreamView
 			$user = JXFactory::getUser($user_id);
 			$title = JText::sprintf("%1s's files", $user->name);
 		}
+
+		// If user is limited to certain group, filter it
+		$limitGroup = $my->getParam('groups_member_limited');
+		if($limitGroup) {
+			$filter['group_id'] = $limitGroup;
+		}
 		
 		$fileModel = StreamFactory::getModel('files');
 		$files = $fileModel->getFiles( $filter, $jconfig->list_limit,JRequest::getVar('limitstart', 0) );
 		$total = $fileModel->getTotal( $filter );
 		
 		// Show storage stats
-		// JXModule::addBuffer('right', $this->getStorageStatsHTML() );
+		JXModule::addBuffer('right', $this->getStorageStatsHTML(), 'file.module.storagestats');
 		
 		$doc = JFactory::getDocument();
 		$doc->setTitle($title);
@@ -91,10 +97,10 @@ class StreamViewFiles extends StreamView
 		
 		return $html;		
 					
-		//JXModule::addBuffer('right', $groupView->getNewGroupsHTML($myGroupsIds) );
-		//JXModule::addBuffer('right', $eventView->getUpcomingHTML() );
-		//echo $this->getStreamPostHTML();
-		//echo $this->getStreamDataHTML();
+		JXModule::addBuffer('right', $groupView->getNewGroupsHTML($myGroupsIds), 'group.module.groups');
+		JXModule::addBuffer('right', $eventView->getUpcomingHTML(), 'group.module.eventslist');
+		#echo $this->getStreamPostHTML();
+		#echo $this->getStreamDataHTML();
 	}
 	
 	/**
@@ -117,7 +123,7 @@ class StreamViewFiles extends StreamView
 		$tmpl = new StreamTemplate();
 		$tmpl->set('title', JText::_('COM_STREAM_LABEL_RELATED_FILES'));
 		$tmpl->set('files', $files)->set('total', $total)->set('group', $group);
-		$html = $tmpl->fetch('file.module.list');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'file.module.list');
 		return $html;
 	}
 	
@@ -138,7 +144,7 @@ class StreamViewFiles extends StreamView
 		$tmpl = new StreamTemplate();
 		$tmpl->set('title', JText::_('COM_STREAM_LABEL_STORAGE_USAGE'));
 		$tmpl->set('used', $used)->set('total', $total);
-		$html = $tmpl->fetch('file.module.storagestats');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'file.module.storagestats');
 		return $html;
 	}
 
@@ -149,10 +155,10 @@ class StreamViewFiles extends StreamView
 		$total = $fileModel->countFiles( array('user_id' => $user->id));
 
 		$tmpl = new StreamTemplate();
-		$tmpl->set('title', JText::_('COM_STREAM_LABEL_FILES'));
+		$tmpl->set('title', JText::_('COM_STREAM_LABEL_MY_FILES'));
 		$tmpl->set('files', $files)->set('total', $total);
 		$tmpl->set('user', $user);
-		$html = $tmpl->fetch('file.module.list');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'file.module.list');
 		return $html;
 	}
 }

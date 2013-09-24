@@ -2,7 +2,7 @@
 /**
  * @version     1.0.0
  * @package     com_administrator
- * @copyright   Copyright (C) 2011. All rights reserved.
+ * @copyright   Copyright (C) 2011 - 2013 Slashes & Dots Sdn Bhd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @author      Created by com_combuilder - http://www.notwebdesign.com
  */
@@ -20,7 +20,7 @@ class AnalyticsFactory
 	 * Return the model instance
 	 * @param type $name 
 	 */
-	public function getModel( $name = '', $prefix = '', $config = array() )
+	public static function getModel( $name = '', $prefix = '', $config = array() )
 	{
 		static $modelInstances = null;
 		
@@ -52,7 +52,7 @@ class AnalyticsFactory
 	/**
 	 * Return single instance view
 	 */	 	
-	public function getView( $name='', $prefix='', $viewType='' )
+	public static function getView( $name='', $prefix='', $viewType='' )
 	{
 		static $viewInstances = null;
 		
@@ -84,7 +84,7 @@ class AnalyticsFactory
 	/**
 	 * Include the given file
 	 */	 	
-	public function load($src){
+	public static function load($src){
 		$src = str_replace('.', DS, $src);
 		include_once(JPATH_ROOT.DS.'components'.DS.'com_analytics'.DS.$src. '.php');
 	}

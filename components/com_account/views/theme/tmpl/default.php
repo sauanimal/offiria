@@ -63,9 +63,12 @@ $showRemove = (JFile::exists($this->configHelper->getCompanyLogoPath()) && !stri
 			
 			<li class="company-logo">
 				<label for="params_logo" class="" id="params_logo-lbl"><?php echo JText::_('COM_ACCOUNT_LABEL_COMPANY_LOGO');?></label>
-				<input type="file" name="c_logo" value="" id="c_logo">
+				<input type="file" name="c_logo" value="" id="c_logo" class="btn btn-info">
 				<input type="hidden" value="<?php echo $this->logo;?>" name="params[logo]"/>
-				<span class="help-text">
+				<?php if ($showRemove) :?>	
+				<input type="button" class="btn btn-danger" value="<?php echo JText::_('COM_ACCOUNT_LABEL_COMPANY_LOGO_REMOVE');?>" id="btn-remove-logo"/>
+				<?php endif; ?>				
+				<br/><br/><span class="help-text">
 					<?php echo JText::_('COM_ACCOUNT_LABEL_COMPANY_LOGO_HELPTEXT');?>
 				</span>
 				
@@ -77,11 +80,6 @@ $showRemove = (JFile::exists($this->configHelper->getCompanyLogoPath()) && !stri
 					
 				</div>
 				
-				<?php if ($showRemove) :?>	
-				<div class="clear"></div>
-				<label for="btn-remove-logo" class="" id="btn-remove-logo-lbl">&nbsp;</label>	
-				<input type="button" value="Remove" id="btn-remove-logo"/>
-				<?php endif; ?>
 				<div class="clear"></div>
 			</li>
 		</ul>

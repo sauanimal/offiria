@@ -46,6 +46,8 @@ class AccountViewInvite extends AccountView
 		$pendingStat= AccountTableUsersInvite::PENDING;
 		$doc = JFactory::getDocument();
 		$doc->setTitle(JText::_("COM_ACCOUNT_LABEL_INVITE_USERS"));
+		$this->addPathway( JText::_('JXLIB_SETTINGS'), JRoute::_('index.php?option=com_account&view=account'));
+		$this->addPathway(JText::_('COM_ACCOUNT_LABEL_INVITE_USERS'));
 		$this->assignRef('inviteEmail', $inviteEmail);
 		$this->assignRef('pagination', $pagination);
 		$this->assignRef('pendingStat', $pendingStat);
@@ -56,6 +58,7 @@ class AccountViewInvite extends AccountView
 		parent::display($tpl);
 	}
 	
+	/* begin not used at the moment --
 	public function modInvitationList()
 	{
 		$usersInvite = AccountFactory::getModel('usersInvite');
@@ -72,16 +75,15 @@ class AccountViewInvite extends AccountView
 		$html		.= '</ul>';
 		return $html;
 	}
+	-- end not used at the moment */
 	
-	public function modMemberInvite()
-	{
+	public function modMemberInvite() {
 		$html = '';
 		$configHelper = new JXConfig();
 		
-		if ($configHelper->allowInvite() && $configHelper->allowUsersRegister())
-		{
+		if ($configHelper->allowInvite() && $configHelper->allowUsersRegister()) {
 			ob_start();
-			require_once(JPATH_ROOT .DS.'components'.DS.'com_account'.DS.'templates'.DS.'modInviteGuest.php');
+			require_once(JPATH_ROOT.DS.'components'.DS.'com_account'.DS.'templates'.DS.'modules'.DS.'module.invite.guest.php');
 			$html = ob_get_contents();
 			ob_end_clean();
 		}

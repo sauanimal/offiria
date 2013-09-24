@@ -16,7 +16,7 @@ class StreamControllerSystem extends JController
 	/**
 	 *
 	 */
-	public function display(){
+	public function display($cachable = false, $urlparams = false){
 		//parent::display( null );
 		echo "To do listing";
 	}
@@ -276,13 +276,17 @@ class StreamControllerSystem extends JController
 				if ($jxConfig->isCrocodocsEnabled())
 				{
 					// Preview not ready, query status
-					$http = new JHttp();
+					$options = new JRegistry();
+					$transport = new JHttpTransportCurl($options);
+					$http = new JHttp($options, $transport);
+
 					$response =  $http->get('https://crocodoc.com/api/v2/document/status?token='.$jxConfig->get(JXConfig::CROCODOCS).'&uuids='.$file->getParam('uuid'));
-					//$response =  $http->get('https://crocodoc.com/api/v2/document/status?token=Oe8fA1mQ59LSwtBlKy4Nkbvn&uuids='.$uuid);
+
 					$responseObj = json_decode($response->body);
+					//print_r($responseObj); exit;
 					if (!isset($responseObj->error))
 					{
-						$isViewable = $responseObj[0]->viewable;
+						$isViewable = !empty($responseObj[0]->viewable) ;
 						if($isViewable){
 							$previewReady = true;
 							$file->setParam('preview-ready', 1);
@@ -315,8 +319,11 @@ class StreamControllerSystem extends JController
 
 					if( time() > $file->getParam('previewExpiry')) {
 						// File uploaded, try to create session
-						$http = new JHttp();
-						$response =  $http->post( 'https://crocodoc.com/api/v2/session/create' , array('token' => $jxConfig->get(JXConfig::CROCODOCS), 'uuid' => $file->getParam('uuid') ) );
+						$options = new JRegistry();
+						$transport = new JHttpTransportCurl($options);
+						$http = new JHttp($options, $transport);
+						
+						$response =  $http->post( 'https://crocodoc.com/api/v2/session/create' , array('token' => '$jxConfig->get(JXConfig::CROCODOCS)', 'uuid' => $file->getParam('uuid') ) );
 						//$response =  $http->post( 'https://crocodoc.com/api/v2/session/create' , array('token' => 'Oe8fA1mQ59LSwtBlKy4Nkbvn', 'uuid' => $uuid ) );
 
 						$responseObj = json_decode($response->body);

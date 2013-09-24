@@ -2,7 +2,7 @@
 /**
  * @version     1.0.0
  * @package     com_administrator
- * @copyright   Copyright (C) 2011. All rights reserved.
+ * @copyright   Copyright (C) 2011 - 2013 Slashes & Dots Sdn Bhd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @author      Offiria Team
  */
@@ -19,10 +19,13 @@ class StreamViewEvents extends StreamView
 {
 	function display($tpl = null)
 	{
+		$config = &JFactory::getConfig();
+		$weekStart = $config->getValue('weekStart');
+
 		$doc = JFactory::getDocument();
 		$doc->setTitle(JText::_("COM_STREAM_LABEL_ALL_EVENTS"));
 		$html = '';
-        $this->addPathway( JText::_('NAVIGATOR_LABEL_EVENTS'), JRoute::_('index.php?option=com_stream&view=groups') );
+        	$this->addPathway( JText::_('NAVIGATOR_LABEL_EVENTS'), JRoute::_('index.php?option=com_stream&view=groups') );
 		
 		$this->_attachScripts();
 		
@@ -36,14 +39,15 @@ class StreamViewEvents extends StreamView
 			<div class="alert alert-success" data-alert_id="'.ALERT_CALENDAR_INTRO.'">
 	        <a data-dismiss="alert" class="close">×</a>
 			'.JText::_('COM_STREAM_HELPER_EVENT').'</div>';
-	    }
+	    	}
         
-		JXModule::addBuffer('right', $this->getUpcomingHotEvent() );
+		JXModule::addBuffer('right', $this->getUpcomingHotEvent(), 'group.module.eventslist');
 		// Show calendar
 		$now = new JDate();
 		StreamFactory::load('helpers'.DS.'calendar');
-		$html .='<div id="stream-calendar">'.StreamCalendarHelper::generate_calendar($now->format('Y'), $now->format('m')) .'</div>';
-		
+		//$html .='<div id="stream-calendar">'.StreamCalendarHelper::generate_calendar($now->format('Y'), $now->format('m')) .'</div>';
+		$html .='<div id="stream-calendar">'.StreamCalendarHelper::generate_calendar($now->format('Y'), $now->format('m'), array(), 3, NULL, $weekStart, array()) .'</div>';
+
 		echo $html;
 		//echo $this->getStreamDataHTML();
 	}
@@ -155,7 +159,7 @@ class StreamViewEvents extends StreamView
 		$tmpl = new StreamTemplate();
 		$tmpl->set('events', $pendingEvent);
 		$tmpl->set('title', JText::_('COM_STREAM_LABEL_UPCOMING_EVENTS'));
-		$html = $tmpl->fetch('group.module.eventlist');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'group.module.eventlist');
 		return $html;
 	}
 	
@@ -201,7 +205,7 @@ class StreamViewEvents extends StreamView
 		$tmpl = new StreamTemplate();
 		$tmpl->set('events', $pendingEvent);
 		$tmpl->set('title', JText::_('COM_STREAM_LABEL_POPULAR_EVENTS'));
-		$html = $tmpl->fetch('group.module.eventlist');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'group.module.eventlist');
 		return $html;
 	}
 

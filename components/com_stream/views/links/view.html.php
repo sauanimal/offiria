@@ -38,7 +38,7 @@ class StreamViewLinks extends StreamView
 		{
 			$filter['user_id'] = $user_id;
 			$user = JXFactory::getUser($user_id);
-			$title = JText::sprintf("%1s's links", $user->name);
+			$title = JText::sprintf('COM_PROFILE_CONTENT_USER_LINKS', $user->name);
 		}
 		
 		$usrLinks	= $user->getParam('links', '');

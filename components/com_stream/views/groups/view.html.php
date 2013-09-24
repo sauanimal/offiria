@@ -110,21 +110,21 @@ class StreamViewGroups extends StreamView
 			$total	= $model->countStream($filter);
 			$html 	.= $tmpl->fetch('stream.filter');
 			
-			/*if ($total <= 0 && $my->getParam('first_grp_create', 0) == 0)
-			{
+			// if new group is created, then let's show some nice helper
+			// no posts in this group and not archived and only for group creator
+			if ($total <= 0 && !$group->archived && $group->creator == $my->id) {
+			//if ($total <= 0 && $my->getParam('first_grp_create', 0) == 0) {
 				$my->setParam('first_grp_create', 1);
 				$my->save();
 				$html 	.= $tmpl->fetch('group.first.create');
-			}
-			else
-			{*/
+			} else {
 				$pagination = new JPagination($total,  JRequest::getVar('limitstart', 0) , $jconfig->list_limit);
 
 				$tmpl->set('rows', $data);
 				$tmpl->set('total', $total);
 				$tmpl->set('pagination', $pagination);
 				$html .= $tmpl->fetch('stream.data');
-			//}
+			}
 		}
 		
 		$fileView = StreamFactory::getView('files');
@@ -137,14 +137,14 @@ class StreamViewGroups extends StreamView
 
 			
 		// Add group header to the sidebar
-		JXModule::addBuffer('right', $tmpl->fetch('group.module.info') );
+		JXModule::addBuffer('right', $tmpl->fetch('..'.DS.'modules'.DS.'group.module.info'), 'group.module.info');
 
-		JXModule::addBuffer('right', $this->modTagsTrendingHTML($group));
-		JXModule::addBuffer('right', $this->modGetMilestonesHTML($group));
-		JXModule::addBuffer('right', $todoView->modGetPendingTask(array('group_id' => $group->id)));
-		JXModule::addBuffer('right', $eventView->getUpcomingHTML(array('group_id'=>$group->id)));
-		JXModule::addBuffer('right', $this->modGetMembersHTML($group) );
-		//JXModule::addBuffer('right', $fileView->modGroupFilesHTML($group));
+		JXModule::addBuffer('right', $this->modTagsTrendingHTML($group), 'todo.module.pending');
+		JXModule::addBuffer('right', $this->modGetMilestonesHTML($group), 'group.module.milestones');
+		JXModule::addBuffer('right', $todoView->modGetPendingTask(array('group_id' => $group->id)), 'todo.module.pending');
+		JXModule::addBuffer('right', $eventView->getUpcomingHTML(array('group_id'=>$group->id)), 'group.module.eventslist');
+		JXModule::addBuffer('right', $this->modGetMembersHTML($group), 'group.module.memberlist');
+		JXModule::addBuffer('right', $fileView->modGroupFilesHTML($group), 'file.module.list');
 
 		return $html;
 	}
@@ -422,7 +422,7 @@ class StreamViewGroups extends StreamView
 			->set('group', $group)
 			->set('members', $members)
 			->set('total', $total);
-		$html = $tmpl->fetch('group.module.memberlist');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'group.module.memberlist');
 
 		return $html;
 	}
@@ -431,13 +431,13 @@ class StreamViewGroups extends StreamView
 	 * Show list of group milestone
 	 */	 	
 	public function modGetMilestonesHTML($group){
-		$html = '<div class="moduletable"><h3>'.JText::_('Milestones').'</h3>';
+		$html = '';
 		
 		$filter = array();
 		$filter['group_id'] = $group->id;
 		$filter['type'] 	= 'milestone';
 		$filter['order_by_asc'] = 'start_date';
-		$filter['status'] = 0;
+		//$filter['status'] = 0;  // only not-complete milestones
 		
 		$streamModel = StreamFactory::getModel('stream');
 		$milestones = $streamModel->getStream( $filter );
@@ -449,10 +449,8 @@ class StreamViewGroups extends StreamView
 		$tmpl = new StreamTemplate();
 		$tmpl->set('milestones', $milestones);
 		$tmpl->set('completedCount', $completedCount);
-		$html .= $tmpl->fetch('group.module.milestoneslist');
-		
-		$html .= '</div>';
-		
+		$html .= $tmpl->fetch('..'.DS.'modules'.DS.'group.module.milestoneslist');
+				
 		return $html;
 	}
 	
@@ -471,7 +469,7 @@ class StreamViewGroups extends StreamView
 		$tmpl = new StreamTemplate();
 		$tmpl->set('title', JText::_('COM_STREAM_LABEL_NEW_GROUPS'));
 		$tmpl->set('groups', $data);
-		$html = $tmpl->fetch('group.module.groups');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'group.module.groups');
 
 		return $html;
 	}
@@ -490,7 +488,7 @@ class StreamViewGroups extends StreamView
 		$tmpl = new StreamTemplate();
 		$tmpl->set('title', JText::_('COM_STREAM_LABEL_ACTIVE_GROUPS'));
 		$tmpl->set('groups', $data);
-		$html = $tmpl->fetch('group.module.groups');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'group.module.groups');
 
 		return $html;
 	}
@@ -511,7 +509,7 @@ class StreamViewGroups extends StreamView
 		$tmpl = new StreamTemplate();
 		$tmpl->set('title', JText::sprintf('COM_STREAM_LABEL_OWNER_GROUPS', $my->name ));
 		$tmpl->set('groups', $data);
-		$html = $tmpl->fetch('group.module.groups');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'group.module.groups');
 
 		return $html;
 	}
@@ -530,7 +528,7 @@ class StreamViewGroups extends StreamView
 		$tmpl = new StreamTemplate();
 		$tmpl->set('title', JText::sprintf("COM_STREAM_LABEL_GROUP_FAVORITE", $my->name ));
 		$tmpl->set('groups', $data);
-		$html = $tmpl->fetch('group.module.groups');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'group.module.groups');
 
 		return $html;
 	}

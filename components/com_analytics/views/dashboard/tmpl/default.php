@@ -29,7 +29,7 @@ defined('_JEXEC') or die;
 		},
 		fetchFilterAnalytic: function(index)
 		{
-			var selection = ['All', 'New Post'];
+			var selection = ['<?php echo JText::_('COM_ANALYTICS_LABEL_ALL');?>', '<?php echo JText::_('COM_ANALYTICS_LABEL_NEW_POST');?>'];
 			$('#dropdown-label').html(selection[index]);
 			$('#analytic_filter_type').val(index);
 			analytics.fetchProfileAnalytic();

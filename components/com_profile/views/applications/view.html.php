@@ -18,8 +18,10 @@ class ProfileViewApplications extends ProfileView
 
 	function display($tpl = null)
 	{	     
-		$document =& JFactory::getDocument();
+		$document = JFactory::getDocument();
 		$document->setTitle(JText::_('COM_PROFILE_LABEL_APPLICATIONS'));
+		$this->addPathway( JText::_('NAVIGATOR_LABEL_PROFILE'), JRoute::_('index.php?option=com_profile&view=edit'));
+		$this->addPathway(JText::_('COM_PROFILE_LABEL_APPLICATIONS'));
 		
 		$apps = new Applications();
 		// contains the user object
@@ -29,6 +31,7 @@ class ProfileViewApplications extends ProfileView
 		}
 
 		$this->assignRef('userDevices', $rows);
+		
 		parent::display($tpl);
 	}
 }

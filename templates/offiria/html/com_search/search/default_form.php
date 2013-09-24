@@ -31,10 +31,10 @@ else
 	$filterRange= '0a';
 }
 $searchPhrase = array('all' => JText::_('PLG_SEARCH_FILTER_ALL'), 
-						'people' => JText::_('PLG_SEARCH_FILTER_PEOPLE'), 
-						'streams' => JText::_('PLG_SEARCH_FILTER_STREAMS'), 
-						//'comments' => JText::_('PLG_SEARCH_FILTER_COMMENTS'), 
-						'files' => JText::_('PLG_SEARCH_FILTER_FILES'));
+					'people' => JText::_('PLG_SEARCH_FILTER_PEOPLE'), 
+					'streams' => JText::_('PLG_SEARCH_FILTER_STREAMS'), 
+					//'comments' => JText::_('PLG_SEARCH_FILTER_COMMENTS'), 
+					'files' => JText::_('PLG_SEARCH_FILTER_FILES'));
 $rangeArray = array('2w' => JText::_('PLG_SEARCH_FILTER_2_WEEKS_AGO'), 
 					'1m' => JText::_('PLG_SEARCH_FILTER_1_MONTH_AGO'), 
 					'3m' => JText::_('PLG_SEARCH_FILTER_3_MONTHS_AGO'), 
@@ -45,7 +45,7 @@ $rangeArray = array('2w' => JText::_('PLG_SEARCH_FILTER_2_WEEKS_AGO'),
 <form id="searchForm" action="<?php echo JRoute::_('index.php?option=com_search');?>" method="post">
 
 	<div class="form-search">	
-		<input type="text" name="searchword" id="search-searchword" size="30" maxlength="20" value="<?php echo $this->escape($this->origkeyword); ?>" class="inputbox" placeholder="Search keyword">
+		<input type="text" name="searchword" id="search-searchword" size="30" maxlength="20" value="<?php echo $this->escape($this->origkeyword); ?>" class="inputbox" placeholder="<?php echo JText::_('COM_SEARCH_SEARCH_KEYWORD'); ?>">
 		<button name="Search" onclick="this.form.submit()" class="btn"><?php echo JText::_('PLG_SEARCH_LABEL_SEARCH');?></button>
 		<input type="hidden" name="task" value="search">
 		<input type="hidden" id="areas" name="areas" value="<?php echo $groupId.'_'.$filterRange;?>" />
@@ -60,12 +60,12 @@ $rangeArray = array('2w' => JText::_('PLG_SEARCH_FILTER_2_WEEKS_AGO'),
 		<?php } ?>
 		
 		<li style="float:right" class="dropdown">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo ($filterRange == '' || $filterRange == '0a') ? 'All' : $rangeArray[$filterRange];?><b class="caret"></b></a>
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo ($filterRange == '' || $filterRange == '0a') ? JText::_('PLG_SEARCH_FILTER_ALL') : $rangeArray[$filterRange];?><b class="caret"></b></a>
 			<ul class="dropdown-menu">
 				<li><a href="javascript:void(0);" onclick="appendSearchRange('0a'); $('#searchForm').submit();"><?php echo JText::_('PLG_SEARCH_FILTER_ALL');?></a></li>
 				<li class="divider"></li>				
 				<?php foreach ($rangeArray as $index => $label) { ?>
-				<li><a href="javascript:void(0);" onclick="appendSearchRange('<?php echo $index;?>'); $('#searchForm').submit();"><?php echo $label;?></a></li>
+				<li><a href="javascript:void(0);" onclick="appendSearchRange('<?php echo $index;?>'); $('#searchForm').submit();">&diams;&nbsp;<?php echo $label;?></a></li>
 				<?php } ?>
 			</ul>
 		</li>

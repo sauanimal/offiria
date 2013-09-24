@@ -51,7 +51,7 @@ class StreamView extends JView
 		$attendees = $stream->getFollowers();
 		$tmpl = new StreamTemplate();
 		$tmpl->set('stream', $stream)->set('attendees', $attendees);
-		$html = $tmpl->fetch('event.module.attendee');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'event.module.attendee');
 		return $html;
 	}
 
@@ -69,7 +69,7 @@ class StreamView extends JView
 			$tmpl->set('groupId', $group->id);
 		}
 
-		$html = $tmpl->fetch('stream.tag.trending');
+		$html = $tmpl->fetch('..'.DS.'modules'.DS.'stream.tag.trending');
 		return $html;
 	}
 }

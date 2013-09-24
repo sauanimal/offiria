@@ -12,6 +12,9 @@ jimport('joomla.xfactory');
 require_once(JPATH_ROOT.DS.'components'.DS.'com_account'.DS.'views'.DS.'view.html.php');
 require_once(JPATH_ROOT.DS.'components'.DS.'com_account'.DS.'controller.php');
 require_once(JPATH_ROOT.DS.'components'.DS.'com_account'.DS.'helpers'.DS.'access.php');
+require_once(JPATH_ROOT.DS.'components'.DS.'com_account'.DS.'helpers'.DS.'birthday.php');
+require_once(JPATH_ROOT.DS.'components'.DS.'com_account'.DS.'helpers'.DS.'weather.php');
+require_once(JPATH_ROOT.DS.'components'.DS.'com_stream'.DS.'defines.php');
 require_once(JPATH_ROOT.DS.'components'.DS.'com_stream'.DS.'access.php');
 
 JLoader::register('StreamCategory', JPATH_ROOT .DS.'components'.DS.'com_stream'.DS.'libraries'.DS.'category.php'); 

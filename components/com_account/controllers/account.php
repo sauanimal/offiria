@@ -2,7 +2,7 @@
 /**
  * @version     1.0.0
  * @package     com_account
- * @copyright   Copyright (C) 2011. All rights reserved.
+ * @copyright   Copyright (C) 2011 - 2013 Slashes & Dots Sdn Bhd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @author      Created by com_combuilder - http://www.notwebdesign.com
  */
@@ -21,10 +21,11 @@ class AccountControllerAccount extends JController
 	{		
 		if ($_POST)
 		{
+			
 			$proceedSave	= true;
 			$configHelper	= new JXConfig();
 			$mainframe		= JFactory::getApplication();
-			
+
 			// Set the posted data to update the configuration
 			$postdata = JRequest::getVar('params');
 						
@@ -33,7 +34,7 @@ class AccountControllerAccount extends JController
 			$param[JXConfig::SITENAME]		= $postdata['sitename'];
 			$param[JXConfig::ALLOW_INVITE]	= (isset($postdata['allow_invite'])) ? intval($postdata['allow_invite']) : '0';
 			$param[JXConfig::ALLOW_ANON]	= (isset($postdata['allow_anon'])) ? intval($postdata['allow_anon']) : '0';
-			
+
 			// Check list of limit email domains and append limit email list into param
 			$limitEmailDomain			= JXConfig::LIMIT_EMAIL_DOMAIN;
 			if (empty($postdata['limit_email_domain']))
@@ -118,6 +119,7 @@ class AccountControllerAccount extends JController
 				{
 					$jUri	= JURI::getInstance();
 					$newUrl	= $jUri->toString(array('scheme')).$param[JXConfig::DOMAIN_NAME].$configHelper->getDomainSuffix();
+
 				}
 
 				// if failed to save into configuration.php
@@ -132,8 +134,8 @@ class AccountControllerAccount extends JController
 				}
 			}
 		}
-		
-		parent::display();
+
+		parent::display( null );
 	}
 	
 	/*
@@ -150,7 +152,7 @@ class AccountControllerAccount extends JController
 			$postdata = JRequest::getVar('jform');
 			
 			$param['crocodocs']		= $postdata['crocodocs'];
-			$param['crocodocsenable']= $postdata['crocodocsenable'];
+			$param['crocodocsenable']	= $postdata['crocodocsenable'];
 			$param['scribd_api']	= $postdata['scribd_api'];
 			$param['scribd_secret']	= $postdata['scribd_secret'];
 			$param['scribdenable']	= $postdata['scribdenable'];
@@ -166,6 +168,40 @@ class AccountControllerAccount extends JController
 			$param['smtphost']		= $postdata['smtphost'];
 			$param['smtpsecure']	= $postdata['smtpsecure'];
 			$param['smtpport']		= $postdata['smtpport'];
+
+			// weather module
+			$param['module_weatherenable'] = $postdata['module_weatherenable'];
+			$param['weather_location']	= $postdata['weather_location'];
+			$param['weather_locationt']	= $postdata['weather_locationt'];
+			$param['weather_showcity']	= $postdata['weather_showcity'];
+			$param['weather_condition']	= $postdata['weather_condition'];
+			$param['weather_humidity']	= $postdata['weather_humidity'];
+			$param['weather_wind']		= $postdata['weather_wind'];
+			$param['weather_forecast']	= $postdata['weather_forecast'];
+			$param['weather_layout']	= $postdata['weather_layout'];
+			$param['weather_separator']	= $postdata['weather_separator'];
+			$param['weather_tempUnit']	= $postdata['weather_tempUnit'];
+			$param['weather_useCache']	= $postdata['weather_useCache'];
+			$param['weather_cacheTime']	= $postdata['weather_cacheTime'];
+
+			// process all enabled/disabled modules
+			$modules = array(
+				"module_invite_guest",
+				"module_members_birthday",
+				"event_module_attendee",
+				"file_module_list",
+				"file_module_storagestats",
+				"group_module_eventslist",
+				"group_module_groups",
+				"group_module_info",
+				"group_module_memberlist",
+				"group_module_milestones",
+				"group_module_archive",
+				"stream_tag_trending",
+				"todo_module_pending");
+			foreach ($modules as $key => $value) {
+				$param['module_' . $value] = $postdata['module_' . $value];
+			}
 			
 			$saveAction = $configHelper->saveConfig($param);
 			
@@ -370,19 +406,22 @@ class AccountControllerAccount extends JController
 			$position = JRequest::getVar('position', NULL);
 
 			// give precedence at the top of form
-			$type = (!empty($department)) ? 'department' : 'position';
-			$category = (!empty($department)) ? $department : $position;
-			if ($table->create($category, $type)) {
-				$mainframe->redirect(JRoute::_('index.php?option=com_account&task=manageDepartment&view=account'), 
-									 JText::_('COM_ACCOUNT_LABEL_'.strtoupper($type).'_SUCCESS_CREATE'));
-			}
-			else {
-				$mainframe->enqueueMessage(JRoute::_('index.php?option=com_account&task=manageDepartment&view=account'), 
-										   JText::_('COM_ACCOUNT_LABEL_'.strtoupper($type).'_ERROR_CREATE'), 'error');
-				if ($c->isExist($category, $position)) {
+			$type = (isset($department)) ? 'department' : 'position';
+			if (trim($department) != '') {
+				$category = (!empty($department)) ? $department : $position;
+				if ($table->create($category, $type)) {
 					$mainframe->redirect(JRoute::_('index.php?option=com_account&task=manageDepartment&view=account'), 
+									 JText::_('COM_ACCOUNT_LABEL_'.strtoupper($type).'_SUCCESS_CREATE'));
+				} else {
+					$mainframe->enqueueMessage(JRoute::_('index.php?option=com_account&task=manageDepartment&view=account'), 
+										   JText::_('COM_ACCOUNT_LABEL_'.strtoupper($type).'_ERROR_CREATE'), 'error');
+					if ($c->isExist($category, $position)) {
+						$mainframe->redirect(JRoute::_('index.php?option=com_account&task=manageDepartment&view=account'), 
 										 JText::_('COM_ACCOUNT_LABEL_'.strtoupper($type).'_ALREADY_EXIST'), 'error');
+					}
 				}
+			} else {
+				$mainframe->enqueueMessage(JText::_('COM_ACCOUNT_LABEL_'.strtoupper($type).'_ERROR_CREATE'), 'error');				
 			}
 		}
 
@@ -473,19 +512,18 @@ class AccountControllerAccount extends JController
 		}
 
 		if ($_POST) {
-			if (JRequest::getVar('blog_category')) { 
+			if (trim(JRequest::getVar('blog_category')) != '') { 
 				$type = 'blog';
 				$category = JRequest::getVar('blog_category');
-			}
-			else if (JRequest::getVar('event_category')) {
+			} else if (trim(JRequest::getVar('event_category')) != '') {
 				$type = 'event';
 				$category = JRequest::getVar('event_category');
-			}
-			else if (JRequest::getVar('group_category')) {
+			} else if (trim(JRequest::getVar('group_category')) != '') {
 				$type = 'group';
 				$category = JRequest::getVar('group_category');
-			}
-			else {
+			} else {
+				$mainframe->enqueueMessage(JText::_('COM_ACCOUNT_LABEL_ERROR_CREATE'), 'error');				
+				parent::display();
 				return false;
 			}
 

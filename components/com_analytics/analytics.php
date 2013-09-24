@@ -2,7 +2,7 @@
 /**
  * @version     1.0.0
  * @package     com_Stream
- * @copyright   Copyright (C) 2011. All rights reserved.
+ * @copyright   Copyright (C) 2011 - 2013 Slashes & Dots Sdn Bhd. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @author      Created by com_combuilder - http://www.notwebdesign.com
  */
@@ -69,7 +69,7 @@ if($task != 'azrul_ajax')
 function analyticsAjaxEntry($func, $args = null)
 {
 	// For AJAX calls, we need to load the language file manually.
-	$lang =& JFactory::getLanguage();
+	$lang = JFactory::getLanguage();
 	$lang->load( 'com_analytics' );
 	
 	$response = new JAXResponse();

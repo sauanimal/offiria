@@ -32,13 +32,13 @@ $milestoneLabel = '';
 switch($milestoneStatus) {
 	case OVERDUE:
 		$milestoneClass = 'overdue';
-		$milestoneDaysText = $milestoneDays . ' days late';
+		$milestoneDaysText = $milestoneDays . ' ' . JText::_('COM_STREAM_LABEL_DAYS_LATE');
 		$milestoneDaysClass = 'day-overdue';
 		$milestoneLabel = 'label-important';
 		break;
 	case INCOMPLETE:
 		$milestoneClass = 'incomplete';
-		$milestoneDaysText = $milestoneDays . ' days left';
+		$milestoneDaysText = $milestoneDays . ' ' . JText::_('COM_STREAM_LABEL_DAYS_LEFT');
 		$milestoneDaysClass = 'day-left';
 		$milestoneLabel = 'label-warning';
 		break;
@@ -78,17 +78,18 @@ switch($milestoneStatus) {
 							<div class="vanity-title">
 								<?php echo StreamMessage::format($stream->message); ?>
 							</div>
-							<div class="progress progress-info progress-striped" milestone="<?php echo $stream->id; ?>">
+							<div class="progress progress-info progress-striped tips" milestone="<?php echo $stream->id; ?>" title="<?php echo $stream->getParam('progress', 0);?>%">
 								<div class="bar" style="width: <?php echo $stream->getParam('progress'); ?>%;"></div>
 							</div>
 							<div class="small">
 								<?php
-								echo 'Due: ' . $startDate->format( JText::_('JXLIB_DATE_SHORT_FORMAT')) . '&nbsp;&#8226;&nbsp;';
+								echo JText::_('COM_STREAM_LABEL_DUE_DATE') . ': ' . $startDate->format( JText::_('JXLIB_DATE_SHORT_FORMAT')) . '&nbsp;&#8226;&nbsp;';
 
 								if($milestoneTaskCount > 0) {
-									echo $milestoneTaskCompletedCount . '/' . $milestoneTaskCount . ' task completed';
+									//echo $milestoneTaskCompletedCount . '/' . $milestoneTaskCount . ' task completed';								
+									echo sprintf(JText::_('COM_STREAM_NO_TASK_COMPLETED'), $milestoneTaskCompletedCount, $milestoneTaskCount);
 								} else {
-									echo 'No tasks assigned';
+									echo JText::_('COM_STREAM_NO_TASK_IN_MILESTONE');
 								}
 								?>
 							</div>
@@ -182,7 +183,7 @@ switch($milestoneStatus) {
 						<input type="button" class="topic-add stream-form-topic-add" name="" value="Add Topic" />
 					</div>
 		
-					<a href="javascript:void(0)" class="message-topic-edit topic-edit-change">Edit</a>
+					<a href="javascript:void(0)" class="message-topic-edit topic-edit-change"><?php echo JText::_('COM_STREAM_LABEL_EDIT');?></a>
 		
 					<?php endif; ?>
 				</div>
@@ -216,13 +217,32 @@ switch($milestoneStatus) {
 			<?php echo $comment; ?>
 		</div>
 	</div>
+	
+	<?
+	if(!empty($data->pinned)) :
+		$tmpDate = date_parse($stream->created);
+		$start = strtotime("now");
+		if ($data->pinned == "1 month") {
+			$end = strtotime("+1 month", mktime($tmpDate["hour"],$tmpDate["minute"],$tmpDate["second"],$tmpDate["month"],$tmpDate["day"], $tmpDate["year"]));	
+		} elseif ($data->pinned == "1 week") {
+			$end = strtotime("+1 week", mktime($tmpDate["hour"],$tmpDate["minute"],$tmpDate["second"],$tmpDate["month"],$tmpDate["day"], $tmpDate["year"]));	
+		} else {
+			$end = strtotime("+1 day", mktime($tmpDate["hour"],$tmpDate["minute"],$tmpDate["second"],$tmpDate["month"],$tmpDate["day"], $tmpDate["year"]));	
+		}
+		$seconds_diff = $end - $start;
 		
+		if (floor($seconds_diff/3600/24) >= 0) :
+		?>
+			<div class="pinned-message tips" title="<?php echo sprintf(JText::_('COM_STREAM_LABEL_PINNED_TIP'),floor($seconds_diff/3600/24)); ?>"></div>
+	<?php endif;
+	endif; ?>	
+	
 	<?php
 	// You can only delete your own message
 	if( $my->authorise('stream.message.edit', $stream) ) {
 	?>
 	<div class="message-remove">
-		<a href="javascript:void(0);" class="remove" original-title="Delete">Delete</a>
+		<a href="javascript:void(0);" class="remove" original-title="Delete"><?php echo JText::_('COM_STREAM_LABEL_DELETE');?></a>
 	</div>
 	<?php } ?>
 		

@@ -65,17 +65,17 @@ if(!$my->id)
 }
 
 // Should Be in Module
-include_once( JPATH_ROOT .DS.'components'.DS.'com_stream'.DS.'factory.php');
+#include_once( JPATH_ROOT .DS.'components'.DS.'com_stream'.DS.'factory.php');
 
-$option = JRequest::getVar('option');
-$view = JRequest::getVar('view');
-$task = JRequest::getVar('task');
-$group_id = JRequest::getVar('group_id');
+$option 	= JRequest::getVar('option');
+$view 		= JRequest::getVar('view');
+$task 		= JRequest::getVar('task');
+$group_id 	= JRequest::getVar('group_id');
 
 $my = JXFactory::getUser();
 $lastMessageRead = $my->getParam('message_last_read');
 $count = StreamMessage::countMessageSince($lastMessageRead);
-//$inboxUnreadCount = MessagingNotification::getUserNotification($my->id);
+$inboxUnreadCount1 = MessagingNotification::getUserNotification($my->id);
 $streamModel 	= StreamFactory::getModel('stream');
 
 // Groups
@@ -174,7 +174,7 @@ function offiria_list_groups($groups, $title, $groupIJoin, $groupIFollow, $opt=a
 		<h3><?php echo $title; ?></h3>
 		<?php
 		// Only show list of groups if there is any
-	   if(!empty($groups)):
+		if(!empty($groups)):
 		?>
 		<ul>
 			<?php foreach($groups as $group) { ?>
@@ -353,11 +353,8 @@ function offiria_list_groups($groups, $title, $groupIJoin, $groupIFollow, $opt=a
 	<!-- Invite -->
 	<div class="container admin-message">
 		<div class="alert alert-warning clearfix">
-			<div class="admin-text pull-left">
-			<strong>Invite your colleagues here!</strong> There is no fun working on <?php echo JText::_('CUSTOM_SITE_NAME');?> alone, you won't be able to properly evaluate what <?php echo JText::_('CUSTOM_SITE_NAME');?> can do for your team if you're all alone here. Invite your colleagues over, all of them. There is no limit to the number of people you can invite. 
-			<span class="small">This message will automatically disappear once there are more than 5 people in your network</span>
-			</div>
-			<div class="pull-right"><a href="<?php echo JRoute::_('index.php?option=com_account&view=invite'); ?>" class="btn btn-inverse">Invite! &raquo;</a></div>
+			<div class="admin-text pull-left"><?php echo sprintf(JText::_('COM_STREAM_INVITATION_ALERT'), JText::_('CUSTOM_SITE_NAME'), JText::_('CUSTOM_SITE_NAME'));?></div>
+			<div class="pull-right"><a href="<?php echo JRoute::_('index.php?option=com_account&view=invite'); ?>" class="btn btn-inverse"><?php echo JText::_('COM_STREAM_INVITATION_ALERT_BTN_INVITE');?> &raquo;</a></div>
 		</div>
 	</div>
 	<?php } ?>
@@ -408,22 +405,23 @@ function offiria_list_groups($groups, $title, $groupIJoin, $groupIFollow, $opt=a
 							</div>
 
 							<div class="user-details">
-								<h3><a href="<?php echo JRoute::_('index.php?option=com_profile&view=display'); ?>"><?php echo $user->name; ?></a></h3>
+								<h3><a href="<?php echo JRoute::_('index.php?option=com_profile&view=display'); ?>"><?php echo $my->name; ?></a></h3>
 
 								<div class="btn-group">
-									<?php /*
-								    <a href="<?php echo JRoute::_('index.php?option=com_messaging'); ?>">Inbox</a>
-							    	<?php if($inboxUnreadCount): ?>
-								    <span style="font-weight: bold; color: #FB4C40; display: inline;">(<?php echo $inboxUnreadCount; ?>)</span>
+									
+								    <a href="<?php echo JRoute::_('index.php?option=com_messaging'); ?>"><?php echo JText::_('NAVIGATOR_LABEL_INBOX');?></a>
+							    	<?php if($inboxUnreadCount1): ?>
+								    <span style="font-weight: bold; color: #FB4C40; display: inline;">(<?php echo $inboxUnreadCount1; ?>)</span>
 									<?php endif; ?>
 									&nbsp;&bull;&nbsp;
-									*/ ?>
+									
 								    <a class="dropdown-toggler" data-toggle="dropdown" href="#"><?php echo JText::_('COM_PROFILE_LABEL_PROFILE_SETTINGS');?><span class="caret"></span></a>
 									
 								    <ul class="dropdown-menu">
-								      <li><a href="<?php echo JRoute::_('index.php?option=com_profile&view=edit'); ?>"><?php echo JText::_('COM_PROFILE_LABEL_EDIT_PROFILE');?></a></li>
-								      <li><a href="<?php echo JRoute::_('index.php?option=com_profile&view=edit&task=changeAvatar'); ?>"><?php echo JText::_('COM_PROFILE_LABEL_PROFILE_AVATAR');?></a></li>
-								      <li><a href="<?php echo JRoute::_('index.php?option=com_profile&view=edit&task=notification'); ?>"><?php echo JText::_('COM_PROFILE_LABEL_NOTIFICATION');?></a></li>
+								      <li><a href="<?php echo JRoute::_('index.php?option=com_profile&view=edit'); ?>">&diams;&nbsp;<?php echo JText::_('COM_PROFILE_LABEL_EDIT_PROFILE');?></a></li>
+									  <li><a href="<?php echo JRoute::_('index.php?option=com_profile&view=edit&task=details'); ?>">&diams;&nbsp;<?php echo JText::_('COM_PROFILE_LABEL_EDIT_DETAILS');?></a></li>
+								      <li><a href="<?php echo JRoute::_('index.php?option=com_profile&view=edit&task=changeAvatar'); ?>">&diams;&nbsp;<?php echo JText::_('COM_PROFILE_LABEL_PROFILE_AVATAR');?></a></li>
+								      <li><a href="<?php echo JRoute::_('index.php?option=com_profile&view=edit&task=notification'); ?>">&diams;&nbsp;<?php echo JText::_('COM_PROFILE_LABEL_NOTIFICATION');?></a></li>
 								    </ul>
 								</div>
 							</div>
@@ -481,8 +479,8 @@ function offiria_list_groups($groups, $title, $groupIJoin, $groupIFollow, $opt=a
 						<!-- DAILY OVERVIEW START -->
 						<div>
 							<?php 						
-							//$companyView = StreamFactory::getView('company', '', 'html');
-							//echo $companyView->modGetDailyOverviewHtml();
+							$companyView = StreamFactory::getView('company', '', 'html');
+							echo $companyView->modGetDailyOverviewHtml();
 							?>
 						</div>
 						<!-- DAILY OVERVIEW END -->
@@ -501,7 +499,7 @@ function offiria_list_groups($groups, $title, $groupIJoin, $groupIFollow, $opt=a
 									endforeach;
 								else:
 								?>
-									<div class="alert alert-info" style="margin-bottom: 8px;">You can personalize your stream messages by creating a custom list. <a href="#" onclick="S.customlist.create(this);return false;">Click here to create yours</a>.</div>
+									<div class="alert alert-info" style="margin-bottom: 8px;"><?php echo JText::_('COM_STREAM_LABEL_STREAM_INFO');?> <a href="#" onclick="S.customlist.create(this);return false;"><?php echo JText::_('COM_STREAM_LABEL_STREAM_CREATE');?></a>.</div>
 								<?php
 								endif;
 								?>
@@ -613,9 +611,8 @@ function offiria_list_groups($groups, $title, $groupIJoin, $groupIFollow, $opt=a
 							}
 						}
 						?>
-				
+
 						<jdoc:include type="modules" name="left" style="default"/>
-					
 					</div><!--end .sidebar-left-inner-->
 					
 					<div class="clear"></div>
@@ -727,28 +724,39 @@ function offiria_list_groups($groups, $title, $groupIJoin, $groupIFollow, $opt=a
 								<input type="submit">
 								<div class="clear"></div>
 							</form>
-						</div>
+						</div>		
 						<div id="<?php if (($view == 'groups' && preg_match("/^show(_.+)?$/", $task) && $group_id > 0) || $view == 'customlist'): ?>group-pages<?php endif; ?>" class="sidebar-right-inner blocks">
-						
 							<?php
+							$accountView = AccountFactory::getView('');
+							if ($view == 'groups') {
+								// if groups page are opened, then move the birthday module at the last
+								JXModule::addBuffer('right', $accountView->modMembersBirthday(), 'module.members.birthday');
+							} else {
+								// adding birthday as a first module
+								JXModule::addBuffer('right_bday', $accountView->modMembersBirthday(), 'module.members.birthday');
+								$birthday =& JXModule::getBuffer('right_bday');
+								if (is_array($birthday) && count($birthday)) echo $birthday[0];
+							}
+							JXModule::addBuffer('right', $accountView->modWeather(), 'weatherenable');
+							
 							// Add guest invite right module
 							$accountView = AccountFactory::getView('invite');
-							JXModule::addBuffer('right', $accountView->modMemberInvite());
-		
+							JXModule::addBuffer('right', $accountView->modMemberInvite(), 'module.invite.guest');
+							// Add weather module
+							
 							$buffer =& JXModule::getBuffer('right');
-
-							foreach($buffer as $buff)
-							{
+							foreach($buffer as $buff) {
 								echo $buff;
 							}
-
+							
+							
+							
 							?>
 							<?php /* if($option == 'com_stream' && $view == 'company') { ?>
 							<img src="<?php echo JURI::root().'components/com_stream/assets/images/hot_topics.png'; ?>" />
 							<?php } */?>
-
+							
 						</div><!-- end .sidebar-right-inner -->
-			
 					</div><!-- end #sidebar-right -->
 					
 				<div class="clear"></div>
