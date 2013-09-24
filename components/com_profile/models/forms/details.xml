@@ -5,6 +5,7 @@
 			<field name="work_department" type="text" label="COM_PROFILE_LABEL_DETAILS_DEPARTMENT" />
 			<field name="work_position" type="text" label="COM_PROFILE_LABEL_DETAILS_POSITION" />
 			<field name="work_title" type="text" label="COM_PROFILE_LABEL_DETAILS_TITLE" required="true" />
+			<field name="manager" type="text" label="COM_PROFILE_LABEL_DETAILS_MANAGER" />
 			<field name="work_experience" type="textarea" label="COM_PROFILE_LABEL_DETAILS_EXPERIENCE" />
 			<field name="work_skills" type="text" label="COM_PROFILE_LABEL_DETAILS_SKILLS"  />
 		</fieldset>

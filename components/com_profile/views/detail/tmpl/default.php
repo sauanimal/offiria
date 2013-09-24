@@ -8,10 +8,14 @@
 
 // no direct access
 defined('_JEXEC') or die;
-$category = new StreamCategory();
-$depts = $category->getByCategory('department');
-$positions = $category->getByCategory('position');
+require_once(JPATH_ROOT .DS.'components'.DS.'com_people'.DS.'factory.php');
 
+$category	= new StreamCategory();
+$depts 		= $category->getByCategory('department');
+$positions 	= $category->getByCategory('position');
+
+$userModel 	= PeopleFactory::getModel('members');
+$members 	= $userModel->getMembers();
 ?>
 
 <div class="profile-navbar">
@@ -19,14 +23,12 @@ $positions = $category->getByCategory('position');
 </div><!--end profile-navbar-->
 
 <form action="<?php echo JRoute::_('index.php?option=com_profile&view=edit&task=details'); ?>" method="post" class="edit">
-
 	<?php
 	$fieldSets = $this->form->getFieldsets('params');
 	// collection of required fields for getting started 
 	$requiredFields = array();
 
-	foreach ($fieldSets as $name => $fieldSet) :
-
+	foreach ($fieldSets as $name => $fieldSet) {
 		if (isset($fieldSet->description) && trim($fieldSet->description)) :
 			echo '<h3>'.$this->escape(JText::_($fieldSet->description)).'</h3>';
 		endif;
@@ -34,52 +36,63 @@ $positions = $category->getByCategory('position');
 
 		<fieldset>
 			<ul>
-				<?php foreach ($this->form->getFieldset($name) as $id => $field) : ?>
-				<?php // hardcoded values as the form generated from xml and the option is from database ?>
-				<?php if ($field->fieldname == 'work_department' || $field->fieldname == 'work_position'): ?>
-				<?php if (!empty ($depts) && $field->fieldname == 'work_department'): ?>
-				<li class="clearfix">
-					<?php echo JText::_($field->label); ?>
-					<select name="params[work_department]">
-						<option><?php echo JText::_('COM_PROFILE_LABEL_DETAILS_UNASSIGNED'); ?></option>
-						<?php foreach ($depts as $dept): ?>
-						<?php $selected = ($field->value == $dept->id) ? 'selected="selected"' : ''; ?>
-						<option <?php echo $selected; ?> value="<?php echo $dept->id; ?>"><?php echo $dept->category; ?></option>
-						<?php endforeach; ?>
-					</select>
-				</li>
-				<?php elseif (!empty ($positions) && $field->fieldname == 'work_position'): ?>
-				<li class="clearfix">
-					<?php echo JText::_($field->label); ?>
-					<select name="params[work_position]">
-						<option><?php echo JText::_('COM_PROFILE_LABEL_DETAILS_UNASSIGNED'); ?></option>
-						<?php foreach ($positions as $pos): ?>
-						<?php $selected = ($field->value == $pos->id) ? 'selected="selected"' : ''; ?>
-						<option <?php echo $selected; ?> value="<?php echo $pos->id; ?>"><?php echo $pos->category; ?></option>
-						<?php endforeach; ?>
-					</select>
-				</li>
-				<?php endif; ?>
-				<?php continue; ?>
-				<?php endif; ?>
-				<li class="clearfix">
-					<?php echo JText::_($field->label); ?>
-					<?php echo $field->input; ?>
-				</li>
 				<?php 
-				  // this required fields is validated for filled the getting started task
-				  if ($field->required) {
-				  	$requiredFields[] = $field->fieldname;
-				  }
-				?>
-				<?php endforeach; ?>
+				foreach ($this->form->getFieldset($name) as $id => $field) {
+					// hardcoded values as the form generated from xml and the option is from database
+					if (in_array($field->fieldname, array('work_department', 'work_position', 'manager'))) {
+						if (!empty ($depts) && $field->fieldname == 'work_department') { ?>
+							<li class="clearfix">
+								<?php echo JText::_($field->label); ?>
+								<select name="params[work_department]">
+									<option><?php echo JText::_('COM_PROFILE_LABEL_DETAILS_UNASSIGNED'); ?></option>
+									<?php foreach ($depts as $dept): ?>
+									<?php $selected = ($field->value == $dept->id) ? 'selected="selected"' : ''; ?>
+									<option <?php echo $selected; ?> value="<?php echo $dept->id; ?>"><?php echo $dept->category; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</li>
+						<?php } elseif (!empty ($positions) && $field->fieldname == 'work_position') { ?>
+							<li class="clearfix">
+								<?php echo JText::_($field->label); ?>
+								<select name="params[work_position]">
+									<option><?php echo JText::_('COM_PROFILE_LABEL_DETAILS_UNASSIGNED'); ?></option>
+									<?php foreach ($positions as $pos): ?>
+									<?php $selected = ($field->value == $pos->id) ? 'selected="selected"' : ''; ?>
+									<option <?php echo $selected; ?> value="<?php echo $pos->id; ?>"><?php echo $pos->category; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</li>
+						<?php } elseif (!empty ($positions) && $field->fieldname == 'manager') { ?>
+							<li class="clearfix">
+								<?php echo JText::_($field->label); ?>
+								<select name="params[manager]">
+									<option><?php echo JText::_('COM_PROFILE_LABEL_DETAILS_UNASSIGNED'); ?></option>
+									<?php foreach ($members as $member): ?>
+									<?php $selected = ($field->value == $member->id) ? 'selected="selected"' : ''; ?>
+									<option <?php echo $selected; ?> value="<?php echo $member->id; ?>"><?php echo $member->name; ?></option>
+									<?php endforeach; ?>
+								</select>
+							</li>
+						<?php }
+						continue;
+					} ?>
+					<li class="clearfix">
+						<?php echo JText::_($field->label); ?>
+						<?php echo $field->input; ?>
+					</li>
+					<?php 
+					// this required fields is validated for filled the getting started task
+					if ($field->required) {
+						$requiredFields[] = $field->fieldname;
+					}
+				}; ?>
 			</ul>
 		</fieldset>
 
-	<?php endforeach; ?>
+	<?php } ?>
 	<div class="submit">
 		<input type="hidden" name="required_fields" value="<?php echo implode(',', $requiredFields); ?>" />
-		<input class="btn btn-info" type="submit" value="Save" name="btnSubmit">
+		<input class="btn btn-info" type="submit" value="<?php echo JText::_('COM_PROFILE_LABEL_SAVE');?>" name="btnSubmit">
 	</div>
 </form>
 <script type="text/javascript">

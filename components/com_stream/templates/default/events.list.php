@@ -3,9 +3,9 @@
 	<ul class="events-list">
 
 		<li>
-			<div class="vanity-col1">Date</div>
-			<div class="vanity-col2">Events</div>
-			<div class="vanity-col3">Status</div>
+			<div class="vanity-col1"><?php JText::_('COM_STREAM_LABEL_DATE'); ?></div>
+			<div class="vanity-col2"><?php JText::_('COM_STREAM_WEEKLY_OVERVIEW_EVENT'); ?></div>
+			<div class="vanity-col3"><?php JText::_('COM_STREAM_LABEL_STATUS'); ?></div>
 			<div class="clear"></div>
 		</li>
 
@@ -50,14 +50,14 @@
 					</div>
 					<div class="small">
 						<span class="start-time">
-							Start: <?php echo $startDate->format( JText::_('JXLIB_DATE_SHORT_FORMAT')); ?> <!-- Only show the date if the event held in >= 2 days -->
+							<?php echo JText::_('COM_STREAM_LABEL_START_DATE'); ?>: <?php echo $startDate->format( JText::_('JXLIB_DATE_SHORT_FORMAT')); ?> <!-- Only show the date if the event held in >= 2 days -->
 							<?php if($startTime != '00:00:00') { echo '&#64;&nbsp;' . $startTime; } ?>
 						</span>
 
 						<?php if($endDate !== null): ?>
 							<div class="clear"></div>
 							<span class="end-time">
-								End: <?php echo $endDate->format( JText::_('JXLIB_DATE_SHORT_FORMAT')); ?>  <!-- Only show the date if the event held in >= 2 days -->
+								<?php echo JText::_('COM_STREAM_LABEL_END_DATE'); ?>: <?php echo $endDate->format( JText::_('JXLIB_DATE_SHORT_FORMAT')); ?>  <!-- Only show the date if the event held in >= 2 days -->
 								<?php if($endTime != '00:00:00') { echo '&#64;&nbsp;' . $endTime; } ?>
 							</span>
 						<?php endif; ?>
@@ -65,7 +65,7 @@
 				</div>
 				<?php if(!empty($attendees)): ?>
 				<div class="user-horizontal-list">
-					<span>Attendees:</span>
+					<span><?php echo  JText::_('COM_STREAM_LABEL_ATTENDEES'); ?>:</span>
 						<?php foreach($attendees as $attendee): ?>
 						<span class="user-list">
 							<a href="<?php echo $attendee->getURL(); ?>">
@@ -75,7 +75,7 @@
 						<?php endforeach; ?>
 						<?php if($attendeesCount > 8):  ?>
 						<span class="user-more">
-							<a href="#">and others ...</a>  <!-- show this if the list of attendees > 8 -->
+							<a href="#"><?php echo JText::_('COM_STREAM_LABEL_ATTENDEES_OTHERS'); ?></a>  <!-- show this if the list of attendees > 8 -->
 						</span>
 						<?php endif; ?>
 				</div>
@@ -84,7 +84,7 @@
 			<div class="vanity-col3">
 				<?php if($eventIsDue == true): ?>
 				<div class="btn">
-					<?php echo JText::_('Past');?>
+					<?php echo JText::_('COM_STREAM_LABEL_PASSED');?>
 				</div>
 				<?php elseif($event->isFollowing($my->id)): ?>
 				<div class="btn unfollow" data-message_id="<?php echo $event->id; ?>">
@@ -105,7 +105,7 @@
 							$date = new JDate( $event->created );?>
 							<a class="meta-date" href="<?php echo $event->getUri();;?>"><?php echo JXDate::formatLapse( $date ); ?></a>
 							• <a class="meta-like" href="#<?php echo (!$event->isLike($my->id))? '' : 'un'; ?>like"><?php echo (!$event->isLike($my->id)) ? JText::_('COM_STREAM_LIKE_LABEL') : JText::_('COM_STREAM_UNLIKE_LABEL'); ?></a>
-							• <a class="meta-comment" href="#comment">Comment</a>
+							• <a class="meta-comment" href="#comment"><?php echo JText::_('COM_STREAM_LABEL_COMMENT'); ?></a>
 							<?php
 							if( false && $my->authorise('stream.message.edit', $event) ){ ?>
 								• <a class="meta-edit" href="#edit"><?php echo JText::_('COM_STREAM_LABEL_EDIT'); ?></a>

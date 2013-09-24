@@ -77,8 +77,8 @@ $(document).ready(function() {
 	<li <?php if($filterStatus == 'all') echo 'class="active"'; ?>>
 		<a href="<?php echo JRoute::_('index.php?' . http_build_query( array_merge($get, array('status' => 'all' )) ) ); ?>"><?php echo JText::_('COM_STREAM_LABEL_FILTER_ALL_TYPE'); ?></a>
 	</li>
-	<li <?php if($filterStatus == 'upcoming') echo 'class="active"'; ?>><a href="<?php echo JRoute::_('index.php?' . http_build_query( array_merge($get, array('status' => 'upcoming' )) ) ); ?>"><?php echo JText::_('Today/Upcoming'); ?></a></li>
-	<li <?php if($filterStatus == 'past') echo 'class="active"'; ?>><a href="<?php echo JRoute::_('index.php?' . http_build_query( array_merge($get, array('status' => 'past' )) ) ); ?>"><?php echo JText::_('Past'); ?></a></li>
+	<li <?php if($filterStatus == 'upcoming') echo 'class="active"'; ?>><a href="<?php echo JRoute::_('index.php?' . http_build_query( array_merge($get, array('status' => 'upcoming' )) ) ); ?>"><?php echo JText::_('COM_STREAM_LABEL_UPCOMING_EVENTS'); ?></a></li>
+	<li <?php if($filterStatus == 'past') echo 'class="active"'; ?>><a href="<?php echo JRoute::_('index.php?' . http_build_query( array_merge($get, array('status' => 'past' )) ) ); ?>"><?php echo JText::_('COM_STREAM_LABEL_PASSED'); ?></a></li>
 		
 	<?php if($showOwnerFilter){ ?>
 	<li class="dropdown pull-right">

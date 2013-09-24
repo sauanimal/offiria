@@ -8,7 +8,6 @@
 
 defined('_JEXEC') or die;
 
-require_once( JPATH_ROOT.DS.'components'.DS.'com_search'.DS.'helpers'.DS. 'search.php' );
 /**
  * HTML View class for the search component
  *
@@ -21,6 +20,8 @@ class SearchViewSearch extends JViewLegacy
 {
 	function display($tpl = null)
 	{
+		require_once JPATH_COMPONENT.'/helpers/search.php';
+		
 		// Initialise some variables
 		$app	= JFactory::getApplication();
 		$pathway = $app->getPathway();

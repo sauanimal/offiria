@@ -2,7 +2,7 @@
 /**
  * @version     1.0.0
  * @package     com_account
- * @copyright   Copyright (C) 2011 - 2013 Slashes & Dots Sdn Bhd. All rights reserved.
+ * @copyright   Copyright (C) 2011. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  * @author      Created by com_combuilder - http://www.notwebdesign.com
  */
@@ -77,7 +77,7 @@ class AccountControllerInvite extends JController
 
 					foreach ($postvar['invitation'] as $email)
 					{
-						$processResult = $this->processInvitation($my, $email, $postvar['group_limited']);
+						$processResult = $this->processInvitation($my, $email, $postvar['invitation_format'], $postvar['group_limited']);
 						if ($processResult['flag'] == self::SENT_FLAG)
 						{
 							$invitedEmail[] = $email;
@@ -107,7 +107,7 @@ class AccountControllerInvite extends JController
 		}
 	}	
 	
-	public function processInvitation($sender, $receiverEmail, $limitedGroupIDs = null)
+	public function processInvitation($sender, $receiverEmail, $format="html", $limitedGroupIDs = null)
 	{
 		$dummy			= new JXUser();
 		$jConfig		= JFactory::getConfig();
@@ -133,7 +133,7 @@ class AccountControllerInvite extends JController
 			
 			// prepare invitation email
 			$subject		= $sender->get('name').' invites you to join '.$jConfig->get('sitename');
-			$bodyContent	= $this->generateInvitationContent($sender, $receiverEmail, $token);
+			$bodyContent	= $this->generateInvitationContent($sender, $receiverEmail, $token, $format);
 
 			$usersInvite->load(array('from_email' => $sender->email, 'invite_email' => $receiverEmail));
 			if (!$usersInvite->id)
@@ -252,19 +252,27 @@ class AccountControllerInvite extends JController
 		return $status;
 	}
 	
-	public function generateInvitationContent($sender, $receiverEmail, $token)
+	public function generateInvitationContent($sender, $receiverEmail, $token, $format)
 	{		
 		$currentTemplate = JText::_('CUSTOM_TEMPLATE');
 		
 		$jConfig = new JXConfig();
 		
-		$invitationUrl = JRoute::_('index.php?option=com_register&view=register&code='.md5($receiverEmail).'&token='.$token.'&email='.$receiverEmail, true, 2);		
+		// Sadly, JRoute will always replace + with %20 , hence we need to hardcode this
+		$receiverEmailPlaceholder = str_replace('+', 'PLUS_SIGN_HOLDER', $receiverEmail);
+		$invitationUrl = JRoute::_('index.php?option=com_register&view=register&code='.md5($receiverEmail).'&token='.$token.'&email='.$receiverEmailPlaceholder, true, 2);    
+		// Restore + sign
+		$invitationUrl = str_replace('PLUS_SIGN_HOLDER', '%2B', $invitationUrl);
 		
 		ob_start();
 		require_once(JPATH_ROOT .DS.'components'.DS.'com_account'.DS.'templates'.DS.'emailInvite.php');
 		$html = ob_get_contents();
 		ob_end_clean();
-		return $html;
+		if ($format == 'html') {
+			return $html;
+		} else {
+			return strip_tags($html);
+		}
 	}
 	
 	public function ajaxDeleteInvitation()
@@ -293,6 +301,7 @@ class AccountControllerInvite extends JController
 		if ($configHelper->allowInvite())
 		{
 			$postvar		= JRequest::getVar('invitation');
+			$inv_format		= JRequest::getVar('invitation_format');
 			$inviteType		= JRequest::getVar('inviteType', '');
 			$arrEmails		= explode(',',$postvar);
 			$emailtoInvite	= $configHelper->cleanEmailList( $arrEmails );
@@ -335,7 +344,7 @@ class AccountControllerInvite extends JController
 
 					foreach ($emailtoInvite as $email)
 					{
-						$processResult = $this->processInvitation($my, $email);
+						$processResult = $this->processInvitation($my, $email, $inv_format);
 						if ($processResult['flag'] == self::SENT_FLAG)
 						{
 							$invitedEmail[] = $email;

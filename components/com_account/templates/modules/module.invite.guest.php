@@ -55,13 +55,15 @@
 		<h3><?php echo JText::_('COM_ACCOUNT_LABEL_INVITE_FRIENDS_HERE');?></h3>
 
 		<form action="<?php echo JRoute::_('index.php?option=com_account&view=invite');?>" id="guest_invite_form" method="get">
-			
+			<div>
+				<input type="radio" name="invitation_format" value="html" checked="checked"> <?php echo JText::_('COM_ACCOUNT_LABEL_INVITE_EMAILS_FORMAT_HTML');?>&nbsp;&nbsp;&nbsp;
+				<input type="radio" name="invitation_format" value="text"> <?php echo JText::_('COM_ACCOUNT_LABEL_INVITE_EMAILS_FORMAT_PLAIN_TEXT');?>
+			</div>			
 			<div class="invitation">
 				<input type="text" name="invitation" id="guest_emails">
 				<input class="btn" value="<?php echo JText::_('COM_ACCOUNT_LABEL_INVITE');?>" type="button" onclick="account.invite();" id="guest_invite_button">
 			</div>
-			<span class="help-block"><?php echo JText::_('COM_ACCOUNT_LABEL_INVITE_HELP_TEXT');?></span>
-			
+			<span class="help-block"><?php echo JText::_('COM_ACCOUNT_LABEL_INVITE_HELP_TEXT');?></span>			
 			<div class="clear"></div>
 		</form>
 		

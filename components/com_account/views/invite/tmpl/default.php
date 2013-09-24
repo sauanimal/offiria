@@ -27,7 +27,17 @@ $no			= 0;
 					</span>
 				</div>
 				<div class="clear"></div>
-			</li>	
+			</li>
+			<li>
+				<label for="params_invitation_format" class="" id="params_invitation_format-lbl"><?php echo JText::_('COM_ACCOUNT_LABEL_INVITE_EMAILS_FORMAT');?></label>
+				<div class="params-invitation">
+					<select name="params[invitation_format]" id="params_invitation_format">
+						<option value="html"><?php echo JText::_('COM_ACCOUNT_LABEL_INVITE_EMAILS_FORMAT_HTML'); ?></option>
+						<option value="text"><?php echo JText::_('COM_ACCOUNT_LABEL_INVITE_EMAILS_FORMAT_PLAIN_TEXT'); ?></option>
+					</select>			
+				</div>
+				<div class="clear"></div>
+			</li>				
 			<li>
 				<label for="params_group_limited" class=""><?php echo JText::_('COM_ACCOUNT_LABEL_GROUP_LIMITED');?></label>
 				<div class="params-invitation">

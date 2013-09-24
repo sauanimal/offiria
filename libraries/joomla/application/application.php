@@ -213,6 +213,10 @@ class JApplication extends JObject
 
 		// Set user specific editor.
 		$user = JFactory::getUser();
+		if ($user->getParam('language'))
+		{
+			$config->set('language', $user->getParam('language'));
+		}		
 		$editor = $user->getParam('editor', $this->getCfg('editor'));
 		if (!JPluginHelper::isEnabled('editors', $editor))
 		{

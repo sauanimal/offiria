@@ -8,7 +8,6 @@
 Class StreamCalendarHelper
 {
 	static public function generate_calendar($year, $month, $days = array(), $day_name_length = 3, $month_href = NULL, $first_day = 0, $pn = array()){
-		$first_day = JText::_('JXLIB_WEEK_START');
 		$first_of_month = gmmktime(0,0,0,$month,1,$year);
 		// remember that mktime will automatically correct if invalid dates are entered
 		//  for instance, mktime(0,0,0,12,32,1997) will be the date for Jan 1, 1998

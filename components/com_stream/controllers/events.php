@@ -26,12 +26,16 @@ class StreamControllerEvents extends JController {
 	}
 
 	public function updateCalendar() {
-		$month = JRequest::getVar('month');
-		$year = JRequest::getVar('year');
+		$config 	= &JFactory::getConfig();
+		$weekStart 	= $config->getValue('weekStart');
+
+		$month 		= JRequest::getVar('month');
+		$year 		= JRequest::getVar('year');
 
 		StreamFactory::load('helpers' . DS . 'calendar');
 
-		$html = StreamCalendarHelper::generate_calendar($year, $month);
+		$html = StreamCalendarHelper::generate_calendar($year, $month, array(), 3, NULL, $weekStart, array());
+
 		$data = array();
 		$data['html'] = $html;
 		$data['script'] = '$(\'div.popover\').hide();$(\'td.running\').popmodal({html:true, live:true, placement: \'below\'});';
